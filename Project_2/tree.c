@@ -1,5 +1,6 @@
 /* FIROIU Mihnea-Ioan 313CD */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include "tree.h"
 

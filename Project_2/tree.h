@@ -3,11 +3,18 @@
 #ifndef TREE_H
 #define TREE_H
 
-typedef struct node {
-    unsigned char node_type;
+#include <stdio.h>
+
+
+typedef struct __attribute__((packed)) {
     unsigned char red;
     unsigned char green;
     unsigned char blue;
+} RGB;
+
+typedef struct node {
+    unsigned char node_type;
+    RGB rgb;
     struct node* up_left;
     struct node* up_right;
     struct node* down_right;
@@ -15,6 +22,5 @@ typedef struct node {
 } Node, *TQuadTree;
 
 void create_tree(TQuadTree *);
-
 
 #endif

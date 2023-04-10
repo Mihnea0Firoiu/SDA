@@ -3,12 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "task_1.h"
-#include "task_2.h"
-#include "task_3.h"
+#include "func.h"
 #include "tree.h"
 
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[]) {
     if (argc < 3) {
         printf("Not enough arguments!\n");
         return -1;
