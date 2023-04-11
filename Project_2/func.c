@@ -53,7 +53,7 @@ void build_image_tree(RGB *rgb_array, int dim, Point up_left, Point down_right,
     }
 
     unsigned char red = 0, green = 0, blue = 0;
-    int column = down_right.column - up_left.column;
+    int column = down_right.column - up_left.column + 1;
     for (int i = up_left.row; i < down_right.row; i++) {
         for (int j = up_left.column; j < down_right.column; j++) {
             red = red + rgb_array[i * dim + j].red;
