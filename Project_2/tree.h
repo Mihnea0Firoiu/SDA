@@ -22,5 +22,8 @@ typedef struct node {
 } Node, *TQuadTree;
 
 void create_tree(TQuadTree *);
+int height(TQuadTree);
+int leaf_num(TQuadTree);
+int min_height(TQuadTree);
 
 #endif
