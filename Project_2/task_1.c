@@ -25,8 +25,8 @@ void task_1(unsigned long long factor, char *in, char *out) {
     Point up_left, down_right;
     up_left.column = 0;
     up_left.row = 0;
-    down_right.column = measurements;
-    down_right.row = measurements;
+    down_right.column = measurements - 1;
+    down_right.row = measurements - 1;
 
     TQuadTree root = NULL;
     build_image_tree(rgb_array, measurements, up_left, down_right, &root,
