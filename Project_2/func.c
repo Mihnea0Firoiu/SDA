@@ -54,8 +54,8 @@ void build_image_tree(RGB *rgb_array, int dim, Point up_left, Point down_right,
 
     unsigned long long red = 0, green = 0, blue = 0;
     int column = down_right.column - up_left.column + 1;
-    for (int i = up_left.row; i < down_right.row; i++) {
-        for (int j = up_left.column; j < down_right.column; j++) {
+    for (int i = up_left.row; i <= down_right.row; i++) {
+        for (int j = up_left.column; j <= down_right.column; j++) {
             red = red + rgb_array[i * dim + j].red;
             green = green + rgb_array[i * dim + j].green;
             blue = blue + rgb_array[i * dim + j].blue;
@@ -67,8 +67,8 @@ void build_image_tree(RGB *rgb_array, int dim, Point up_left, Point down_right,
     blue = blue / (column * column);
     unsigned long long mean = 0;
 
-    for (int i = up_left.row; i < down_right.row; i++) {
-        for (int j = up_left.column; j < down_right.column; j++) {
+    for (int i = up_left.row; i <= down_right.row; i++) {
+        for (int j = up_left.column; j <= down_right.column; j++) {
             mean = mean + (red - rgb_array[i * dim + j].red) *
              (red - rgb_array[i * dim + j].red)
              + (green - rgb_array[i * dim + j].green)
@@ -77,15 +77,16 @@ void build_image_tree(RGB *rgb_array, int dim, Point up_left, Point down_right,
              * (blue - rgb_array[i * dim + j].blue);
         }
     }
+    
     mean = mean / (3 * column * column);
-    printf("%llu %llu\n", mean ,factor);
+
     if (mean < factor) {
         (*root)->node_type = 1;
         (*root)->rgb = rgb_array[up_left.row * dim + up_left.column];
         return ;
     } else {
         Point up_left_copy, down_right_copy;
-        // TODO: Rezolva apelurile recursive
+
         // Up_left
         up_left_copy.row = up_left.row;
         up_left_copy.column = up_left.column;
