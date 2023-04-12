@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
             printf("Not enough arguments!\n");
             return -1;
         }
-        unsigned char factor = argv[2][0];
+        unsigned long long factor = atoll(argv[2]);
         task_1(factor, argv[3], argv[4]);
         return 0;
     } else if (strcmp(argv[1], "-c2") == 0) {
@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
             printf("Not enough arguments!\n");
             return -1;
         }
-        unsigned char factor = argv[2][0];
+        unsigned long long factor = atoll(argv[2]);
         task_2(factor, argv[3], argv[4]);
         return 0;
     } else if (strcmp(argv[1], "-d") == 0) {

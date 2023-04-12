@@ -16,10 +16,11 @@ typedef struct point {
     int column;
 } Point;
 
-void build_image_tree(RGB *, int, Point, Point, TQuadTree *, unsigned char);
+void build_image_tree(RGB *, int, Point, Point, TQuadTree *,
+ unsigned long long);
 
-void task_1(unsigned char, char*, char*);
-void task_2(unsigned char, char*, char*);
+void task_1(unsigned long long, char*, char*);
+void task_2(unsigned long long, char*, char*);
 void task_3(char*, char*);
 
 #endif
