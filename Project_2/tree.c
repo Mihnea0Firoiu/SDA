@@ -27,11 +27,14 @@ int height(TQuadTree root) {
 
     if (up_left >= up_right && up_left >= down_left && up_left >= down_right) {
         return up_left + 1;
-    } else if (up_right >= up_left && up_right >= down_left && up_right >= down_right) {
+    } else if (up_right >= up_left && up_right >= down_left
+     && up_right >= down_right) {
         return up_right + 1;
-    } else if (down_left >= up_left && down_left >= up_right && down_left >= down_right) {
+    } else if (down_left >= up_left && down_left >= up_right
+     && down_left >= down_right) {
         return down_left + 1;
-    } else if (down_right >= up_left && down_right >= up_right && down_right >= down_left) {
+    } else if (down_right >= up_left && down_right >= up_right
+     && down_right >= down_left) {
         return down_right + 1;
     }
     return 0;
@@ -66,18 +69,21 @@ int min_height(TQuadTree root) {
     }
     int up_left, up_right, down_right, down_left;
     
-    up_left = height(root->up_left);
-    up_right = height(root->up_right);
-    down_right = height(root->down_right);
-    down_left = height(root->down_left);
+    up_left = height(root->up_left) + 1;
+    up_right = height(root->up_right) + 1;
+    down_right = height(root->down_right) + 1;
+    down_left = height(root->down_left) + 1;
 
     if (up_left <= up_right && up_left <= down_left && up_left <= down_right) {
         return up_left;
-    } else if (up_right <= up_left && up_right <= down_left && up_right <= down_right) {
+    } else if (up_right <= up_left && up_right <= down_left
+     && up_right <= down_right) {
         return up_right;
-    } else if (down_left <= up_left && down_left <= up_right && down_left <= down_right) {
+    } else if (down_left <= up_left && down_left <= up_right
+     && down_left <= down_right) {
         return down_left;
-    } else if (down_right <= up_left && down_right <= up_right && down_right <= down_left) {
+    } else if (down_right <= up_left && down_right <= up_right
+     && down_right <= down_left) {
         return down_right;
     }
     return 0;

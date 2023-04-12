@@ -5,7 +5,7 @@
 #include "func.h"
 #include "tree.h"
 
-void task_1(unsigned char factor, char *in, char *out) {
+void task_1(unsigned long long factor, char *in, char *out) {
     FILE* input = fopen(in, "rb");
     FILE* output = fopen(out, "w");
     if (input == NULL) {
@@ -28,16 +28,18 @@ void task_1(unsigned char factor, char *in, char *out) {
     down_right.column = measurements;
     down_right.row = measurements;
 
-    TQuadTree root;
-    build_image_tree(rgb_array, measurements, up_left, down_right, &root, factor);
+    TQuadTree root = NULL;
+    build_image_tree(rgb_array, measurements, up_left, down_right, &root,
+     factor);
 
-    int level_number = height(root);
+    int level_number = height(root) + 1;
     int number_of_blocks = leaf_num(root);
     int biggest_undiv_square = measurements;
     int lowest = min_height(root);
     biggest_undiv_square = biggest_undiv_square >> lowest; // Divide by 2^lowest
 
-    fprintf(output, "%d\n%d\n%d\n", level_number, number_of_blocks, biggest_undiv_square);
+    fprintf(output, "%d\n%d\n%d\n", level_number, number_of_blocks,
+     biggest_undiv_square);
     fclose(input);
     fclose(output);
 }
