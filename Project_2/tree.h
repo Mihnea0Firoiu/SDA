@@ -25,5 +25,10 @@ void create_tree(TQuadTree *);
 int height(TQuadTree);
 int leaf_num(TQuadTree);
 int min_height(TQuadTree);
+void print_level(TQuadTree, int, FILE*);
+void compress(TQuadTree, int, int, FILE*);
+void read_tree(FILE*, char **, int*);
+void insert(TQuadTree*, unsigned char, unsigned char, RGB);
+void decompress(FILE*, TQuadTree*, char*, int);
 
 #endif

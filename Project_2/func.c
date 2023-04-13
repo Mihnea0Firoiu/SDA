@@ -46,11 +46,6 @@ void build_image_tree(RGB *rgb_array, int dim, Point up_left, Point down_right,
     if ((*root) == NULL) {
         create_tree(root);
     }
-    if (up_left.row == down_right.row && up_left.column == down_right.column) {
-        (*root)->node_type = 1;
-        (*root)->rgb = rgb_array[up_left.row * dim + up_left.column];
-        return;
-    }
 
     unsigned long long red = 0, green = 0, blue = 0;
     int column = down_right.column - up_left.column + 1;
@@ -80,9 +75,11 @@ void build_image_tree(RGB *rgb_array, int dim, Point up_left, Point down_right,
     
     mean = mean / (3 * column * column);
 
-    if (mean < factor) {
+    if (mean <= factor) {
         (*root)->node_type = 1;
-        (*root)->rgb = rgb_array[up_left.row * dim + up_left.column];
+        (*root)->rgb.red = (unsigned char)red;
+        (*root)->rgb.green = (unsigned char)green;
+        (*root)->rgb.blue = (unsigned char)blue;
         return ;
     } else {
         Point up_left_copy, down_right_copy;
@@ -119,4 +116,10 @@ void build_image_tree(RGB *rgb_array, int dim, Point up_left, Point down_right,
         build_image_tree(rgb_array, dim, up_left_copy, down_right_copy,
          &((*root)->down_left), factor);
     }
+}
+
+unsigned int read_size(FILE* input) {
+    unsigned int size;
+    fread(&size, sizeof(unsigned int), 1, input);
+    return size;
 }
