@@ -10,6 +10,7 @@ void read_type(FILE*);
 int read_measurements(FILE*);
 void read_colour_value(FILE*);
 RGB *read_image(int, FILE*);
+unsigned int read_size(FILE*);
 
 typedef struct point {
     int row;
