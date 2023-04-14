@@ -19,6 +19,8 @@ typedef struct point {
 
 void build_image_tree(RGB *, int, Point, Point, TQuadTree *,
  unsigned long long);
+void get_array(RGB **, int, Point, Point, TQuadTree);
+void print_array(RGB*, int, FILE*);
 
 void task_1(unsigned long long, char*, char*);
 void task_2(unsigned long long, char*, char*);

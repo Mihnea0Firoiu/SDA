@@ -35,8 +35,8 @@ void read_colour_value(FILE* input) {
 }
 
 RGB *read_image(int measurements, FILE* input) {
-    RGB *rgb_array = malloc(measurements * measurements * sizeof(RGB));
-    fscanf(input, "\n");
+    RGB *rgb_array = malloc(measurements * measurements * sizeof(RGB)); 
+    fseek(input, 1, SEEK_CUR);
     fread(rgb_array, sizeof(RGB), measurements * measurements, input);
     return rgb_array;
 }
@@ -122,4 +122,50 @@ unsigned int read_size(FILE* input) {
     unsigned int size;
     fread(&size, sizeof(unsigned int), 1, input);
     return size;
+}
+
+void get_array(RGB **rgb_array, int dim, Point up_left, Point down_right,
+ TQuadTree root) {
+    if (root->node_type == 1) {
+        for (int i = up_left.row; i <= down_right.row; i++) {
+            for (int j = up_left.column; j <= down_right.column; j++) {
+                (*rgb_array)[i * dim + j] = root->rgb;
+            }
+        }
+        return;
+    }
+    Point up_left_copy, down_right_copy;
+
+    // Up_left
+    up_left_copy.row = up_left.row;
+    up_left_copy.column = up_left.column;
+    down_right_copy.row = (up_left.row + down_right.row) / 2;
+    down_right_copy.column = (up_left.column + down_right.column) / 2;
+    get_array(rgb_array, dim, up_left_copy, down_right_copy, root->up_left);
+
+    // Up_right
+    up_left_copy.row = up_left.row;
+    up_left_copy.column = 1 + (up_left.column + down_right.column) / 2;
+    down_right_copy.row = (up_left.row + down_right.row) / 2;
+    down_right_copy.column = down_right.column;
+    get_array(rgb_array, dim, up_left_copy, down_right_copy, root->up_right);
+
+    // Down_right
+    up_left_copy.row = 1 + (up_left.row + down_right.row) / 2;
+    up_left_copy.column = 1 + (up_left.column + down_right.column) / 2;
+    down_right_copy.row = down_right.row;
+    down_right_copy.column = down_right.column;
+    get_array(rgb_array, dim, up_left_copy, down_right_copy, root->down_right);
+
+    // Down_left
+    up_left_copy.row = 1 + (up_left.row + down_right.row) / 2;
+    up_left_copy.column = up_left.column;
+    down_right_copy.row = down_right.row;
+    down_right_copy.column = (up_left.column + down_right.column) / 2;
+    get_array(rgb_array, dim, up_left_copy, down_right_copy, root->down_left);
+    
+}
+
+void print_array(RGB* rgb_array, int dim, FILE* output) {
+    fwrite(rgb_array, sizeof(RGB), dim * dim, output);
 }
