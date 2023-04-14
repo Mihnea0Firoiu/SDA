@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "tree.h"
+#include "Queue.h"
 
 void create_tree(TQuadTree* root) {
     (*root) = calloc(1, sizeof(Node));
@@ -96,10 +97,7 @@ void print_level(TQuadTree root, int level, FILE* output) {
     if (level == 0) {
         fwrite(&root->node_type, sizeof(char), 1, output);
         if (root->node_type == 1) {
-            //fwrite(&root->rgb, sizeof(RGB), 1, output);
-            fwrite(&root->rgb.red, sizeof(unsigned char), 1, output);
-            fwrite(&root->rgb.green, sizeof(unsigned char), 1, output);
-            fwrite(&root->rgb.blue, sizeof(unsigned char), 1, output);
+            fwrite(&root->rgb, sizeof(RGB), 1, output);
         }
     }
     print_level(root->up_left, level - 1, output);
@@ -115,35 +113,111 @@ void compress(TQuadTree root, int level_number, int measurements, FILE* output) 
     }
 }
 
-void read_tree(FILE* input, char **buffer, int *buffer_size) {
+void read_tree(FILE* input, char **buffer, unsigned long long *buffer_size) {
     fseek(input, 0, SEEK_END);
-    *buffer_size = ftell(input);
-    fseek(input, 0, SEEK_SET);
+    *buffer_size = ftell(input) - sizeof(unsigned int);
+    fseek(input, sizeof(unsigned int), SEEK_SET);
     *buffer = malloc(*buffer_size);
     fread(*buffer, *buffer_size, 1, input);
     
 }
 
-void insert(TQuadTree *root, unsigned char parent_type, unsigned char type, RGB rgb) {
-    if (*root == NULL && parent_type == 0) {
-        create_tree(root);
-        (*root)->node_type = type;
-        (*root)->rgb = rgb;
-        return;
-    } else if (*root == NULL) {
-        return;
+TQuadTree insert(TQuadTree root, unsigned char type, RGB rgb) {
+    if (root == NULL) {
+        create_tree(&root);
+        root->node_type = type;
+        root->rgb = rgb;
+        return root;
     }
-    parent_type = (*root)->node_type;
+    TQueue queue = init_queue(root);
+    while (is_empty(queue) == 0) {
+
+        TQuadTree head = queue->head->tree;
+        queue = dequeue(queue);
+
+        if (head->up_left != NULL && head->node_type == 0) {
+            queue = enqueue(queue, head->up_left);
+        } else if (head->node_type == 0) {
+
+            create_tree(&head->up_left);
+            head->up_left->node_type = type;
+            head->up_left->rgb = rgb;
+
+            queue = free_queue(queue);
+            return root;
+        }
+        if (head->up_right != NULL && head->node_type == 0) {
+            queue = enqueue(queue, head->up_right);
+        } else if (head->node_type == 0) {
+
+            create_tree(&head->up_right);
+            head->up_right->node_type = type;
+            head->up_right->rgb = rgb;
+
+            queue = free_queue(queue);
+            return root;
+        }
+        if (head->down_right != NULL && head->node_type == 0) {
+            queue = enqueue(queue, head->down_right);
+        } else if (head->node_type == 0) {
+
+            create_tree(&head->down_right);
+            head->down_right->node_type = type;
+            head->down_right->rgb = rgb;
+
+            queue = free_queue(queue);
+            return root;
+        }
+        if (head->down_left != NULL && head->node_type == 0) {
+            queue = enqueue(queue, head->down_left);
+        } else if (head->node_type == 0) {
+
+            create_tree(&head->down_left);
+            head->down_left->node_type = type;
+            head->down_left->rgb = rgb;
+
+            queue = free_queue(queue);
+            return root;
+        }
+
+
+    }
+    queue = free_queue(queue);
+    return root;
+    
 }
 
+// void insert_v2(TQuadTree* root, unsigned char type, RGB rgb, int* ok) {
+//     if (*ok == 1) {
+//         return;
+//     } else {
+//         if (*root == NULL) {
+//             create_tree(root);
+//             (*root)->node_type = type;
+//             (*root)->rgb = rgb;
+//         }
+
+//     }
+// }
+
 void decompress(FILE* input, TQuadTree* root, char* buffer, int buffer_size) {
-    if (*root == NULL) {
-        create_tree(root);
-    }
+    RGB rgb;
     for (int i = 0; i < buffer_size; i++) {
+        //int ok = 0;
         unsigned char type = buffer[i];
         if (type == 0) {
-
+            rgb.red = 0;
+            rgb.green = 0;
+            rgb.blue = 0;
+            (*root) = insert(*root, type, rgb);
+            //insert_v2(root, type, rgb, &ok);
+        } else if (type == 1) {
+            rgb.red = buffer[++i];
+            rgb.green = buffer[++i];
+            rgb.blue = buffer[++i];
+            (*root) = insert(*root, type, rgb);
+            //insert_v2(root, type, rgb, &ok);
         }
     }
+    free(buffer);
 }

@@ -30,8 +30,8 @@ void task_2(unsigned long long factor, char *in, char *out) {
     TQuadTree root = NULL;
     build_image_tree(rgb_array, measurements, up_left, down_right, &root,
      factor);
-    int level_number = height(root) + 1;
 
+    int level_number = height(root) + 1;
     compress(root, level_number, measurements, output);
     
     fclose(input);
