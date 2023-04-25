@@ -3,7 +3,7 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#include "tree.h"
+typedef struct node *TQuadTree;
 
 typedef struct node_q {
     TQuadTree tree;

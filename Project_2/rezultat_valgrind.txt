@@ -1,0 +1,13 @@
+==48492== 78,600 (40 direct, 78,560 indirect) bytes in 1 blocks are definitely lost in loss record 9 of 10
+==48492==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==48492==    by 0x10A5FA: create_tree (tree.c:9)
+==48492==    by 0x10AB3F: insert (tree.c:128)
+==48492==    by 0x10AE18: decompress (tree.c:198)
+==48492==    by 0x10A4DE: task_3 (task_3.c:25)
+==48492==    by 0x10A0B1: main (quadtree.c:32)
+==48492== 
+==48492== 196,608 bytes in 1 blocks are definitely lost in loss record 10 of 10
+==48492==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==48492==    by 0x10A575: task_3 (task_3.c:37)
+==48492==    by 0x10A0B1: main (quadtree.c:32)
+==48492== 

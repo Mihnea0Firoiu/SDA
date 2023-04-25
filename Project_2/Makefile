@@ -3,11 +3,11 @@ CFLAGS = -g -Wall -pedantic-errors
 
 .phony: clean run
 
-build: tema2.o task_1.o task_2.o task_3.o tree.o func.o Queue.o
-	$(CC) $(CFLAGS) *.o -o tema2
+build: quadtree.o task_1.o task_2.o task_3.o tree.o func.o Queue.o
+	$(CC) $(CFLAGS) *.o -o quadtree
 
-tema2.o: tema2.c
-	$(CC) $(CFLAGS) -c tema2.c -o tema2.o
+tema2.o: quadtree.c
+	$(CC) $(CFLAGS) -c quadtree.c -o quadtree.o
 
 task_1.o: task_1.c
 	$(CC) $(CFLAGS) -c task_1.c -o task_1.o

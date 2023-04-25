@@ -106,7 +106,8 @@ void print_level(TQuadTree root, int level, FILE* output) {
     print_level(root->down_left, level - 1, output);
 }
 
-void compress(TQuadTree root, int level_number, int measurements, FILE* output) {
+void compress(TQuadTree root, int level_number, int measurements,
+ FILE* output) {
     fwrite(&measurements, sizeof(unsigned int), 1, output);
     for (int i = 0; i < level_number; i++) {
         print_level(root, i, output);
@@ -122,102 +123,86 @@ void read_tree(FILE* input, char **buffer, unsigned long long *buffer_size) {
     
 }
 
-TQuadTree insert(TQuadTree root, unsigned char type, RGB rgb) {
+TQuadTree insert(TQuadTree root, unsigned char type, RGB rgb, TQueue* queue) {
     if (root == NULL) {
         create_tree(&root);
         root->node_type = type;
         root->rgb = rgb;
+        *queue = init_queue(root);
         return root;
     }
-    TQueue queue = init_queue(root);
-    while (is_empty(queue) == 0) {
+    
+    while (is_empty(*queue) == 0) {
 
-        TQuadTree head = queue->head->tree;
-        queue = dequeue(queue);
+        TQuadTree head = (*queue)->head->tree;
 
-        if (head->up_left != NULL && head->node_type == 0) {
-            queue = enqueue(queue, head->up_left);
-        } else if (head->node_type == 0) {
+        if (head->up_left == NULL) {
 
             create_tree(&head->up_left);
             head->up_left->node_type = type;
             head->up_left->rgb = rgb;
-
-            queue = free_queue(queue);
+            if (type != 1) {
+                *queue = enqueue(*queue, head->up_left);
+            }
             return root;
         }
-        if (head->up_right != NULL && head->node_type == 0) {
-            queue = enqueue(queue, head->up_right);
-        } else if (head->node_type == 0) {
+
+        if (head->up_right == NULL) {
 
             create_tree(&head->up_right);
             head->up_right->node_type = type;
             head->up_right->rgb = rgb;
-
-            queue = free_queue(queue);
+            if (type != 1) {
+                *queue = enqueue(*queue, head->up_right);
+            }
             return root;
         }
-        if (head->down_right != NULL && head->node_type == 0) {
-            queue = enqueue(queue, head->down_right);
-        } else if (head->node_type == 0) {
+
+        if (head->down_right == NULL) {
 
             create_tree(&head->down_right);
             head->down_right->node_type = type;
             head->down_right->rgb = rgb;
-
-            queue = free_queue(queue);
+            if (type != 1) {
+                *queue = enqueue(*queue, head->down_right);
+            }
             return root;
         }
-        if (head->down_left != NULL && head->node_type == 0) {
-            queue = enqueue(queue, head->down_left);
-        } else if (head->node_type == 0) {
+        
+        if (head->down_left == NULL) {
 
             create_tree(&head->down_left);
             head->down_left->node_type = type;
             head->down_left->rgb = rgb;
-
-            queue = free_queue(queue);
+            if (type != 1) {
+                *queue = enqueue(*queue, head->down_left);
+            }
+            *queue = dequeue(*queue);
             return root;
         }
 
 
     }
-    queue = free_queue(queue);
     return root;
-    
 }
-
-// void insert_v2(TQuadTree* root, unsigned char type, RGB rgb, int* ok) {
-//     if (*ok == 1) {
-//         return;
-//     } else {
-//         if (*root == NULL) {
-//             create_tree(root);
-//             (*root)->node_type = type;
-//             (*root)->rgb = rgb;
-//         }
-
-//     }
-// }
 
 void decompress(FILE* input, TQuadTree* root, char* buffer, int buffer_size) {
     RGB rgb;
+    TQueue queue = NULL;
     for (int i = 0; i < buffer_size; i++) {
-        //int ok = 0;
         unsigned char type = buffer[i];
         if (type == 0) {
             rgb.red = 0;
             rgb.green = 0;
             rgb.blue = 0;
-            (*root) = insert(*root, type, rgb);
-            //insert_v2(root, type, rgb, &ok);
+            (*root) = insert(*root, type, rgb, &queue);
         } else if (type == 1) {
             rgb.red = buffer[++i];
             rgb.green = buffer[++i];
             rgb.blue = buffer[++i];
-            (*root) = insert(*root, type, rgb);
-            //insert_v2(root, type, rgb, &ok);
+            (*root) = insert(*root, type, rgb, &queue);
         }
     }
+    queue = free_queue(queue);
     free(buffer);
 }
