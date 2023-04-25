@@ -4,7 +4,7 @@
 #define TREE_H
 
 #include <stdio.h>
-
+#include "Queue.h"
 
 typedef struct __attribute__((packed)) {
     unsigned char red;
@@ -28,8 +28,7 @@ int min_height(TQuadTree);
 void print_level(TQuadTree, int, FILE*);
 void compress(TQuadTree, int, int, FILE*);
 void read_tree(FILE*, char **, unsigned long long*);
-TQuadTree insert(TQuadTree, unsigned char, RGB);
-//void insert_v2(TQuadTree*, unsigned char, RGB, int*);
+TQuadTree insert(TQuadTree, unsigned char, RGB, TQueue*);
 void decompress(FILE*, TQuadTree*, char*, int);
 
 #endif
