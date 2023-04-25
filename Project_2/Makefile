@@ -28,7 +28,7 @@ Queue.o: Queue.c
 	$(CC) $(CFLAGS) -c Queue.c -o Queue.o
 
 clean:
-	rm -f tema2 *.o
+	rm -f quadtree *.o
 
 run: tema2
 	./tema2
