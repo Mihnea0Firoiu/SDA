@@ -40,6 +40,11 @@ void task_1(unsigned long long factor, char *in, char *out) {
 
     fprintf(output, "%d\n%d\n%d\n", level_number, number_of_blocks,
      biggest_undiv_square);
+    
+    free_tree(&root);
+
+    free(rgb_array);
+
     fclose(input);
     fclose(output);
 }

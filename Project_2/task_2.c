@@ -33,7 +33,11 @@ void task_2(unsigned long long factor, char *in, char *out) {
 
     int level_number = height(root) + 1;
     compress(root, level_number, measurements, output);
-    
+
+    free_tree(&root);
+
+    free(rgb_array);
+
     fclose(input);
     fclose(output);
     return;
