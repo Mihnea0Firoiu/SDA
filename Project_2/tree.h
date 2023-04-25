@@ -30,5 +30,6 @@ void compress(TQuadTree, int, int, FILE*);
 void read_tree(FILE*, char **, unsigned long long*);
 TQuadTree insert(TQuadTree, unsigned char, RGB, TQueue*);
 void decompress(FILE*, TQuadTree*, char*, int);
+void free_tree(TQuadTree *);
 
 #endif

@@ -206,3 +206,14 @@ void decompress(FILE* input, TQuadTree* root, char* buffer, int buffer_size) {
     queue = free_queue(queue);
     free(buffer);
 }
+
+void free_tree(TQuadTree *tree) {
+    if (*tree == NULL) {
+        return;
+    }
+    free_tree(&(*tree)->up_left);
+    free_tree(&(*tree)->up_right);
+    free_tree(&(*tree)->down_right);
+    free_tree(&(*tree)->down_left);
+    free(*tree);
+}

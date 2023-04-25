@@ -37,6 +37,10 @@ void task_3(char *in, char *out) {
     RGB *rgb_array = malloc(size * size * sizeof(RGB));
     get_array(&rgb_array, size, up_left, down_right, root);
     print_array(rgb_array, size, output);
+    
+    free_tree(&root);
+
+    free(rgb_array);
 
     fclose(input);
     fclose(output);
