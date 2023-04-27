@@ -16,11 +16,14 @@ void task_2(unsigned long long factor, char *in, char *out) {
         exit(1);
     }
 
+    // Read input from file.
     read_type(input);
     unsigned int measurements = read_measurements(input);
     read_colour_value(input);
     RGB *rgb_array = read_image(measurements, input);
 
+    /* For each subsection of the array it is enough to know the coordinates 
+    of the top-left corner and down-right corner. */
     Point up_left, down_right;
     up_left.column = 0;
     up_left.row = 0;

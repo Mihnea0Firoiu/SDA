@@ -124,6 +124,7 @@ void read_tree(FILE* input, char **buffer, unsigned long long *buffer_size) {
 }
 
 TQuadTree insert(TQuadTree root, unsigned char type, RGB rgb, TQueue* queue) {
+    // Insertion stops when the node is inserted.
     if (root == NULL) {
         create_tree(&root);
         root->node_type = type;
