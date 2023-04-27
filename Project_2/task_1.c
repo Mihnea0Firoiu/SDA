@@ -17,11 +17,14 @@ void task_1(unsigned long long factor, char *in, char *out) {
         exit(1);
     }
 
+    // Read input from file.
     read_type(input);
     unsigned int measurements = read_measurements(input);
     read_colour_value(input);
     RGB *rgb_array = read_image(measurements, input);
 
+    /* For each subsection of the array it is enough to know the coordinates 
+    of the top-left corner and down-right corner. */
     Point up_left, down_right;
     up_left.column = 0;
     up_left.row = 0;
@@ -34,9 +37,8 @@ void task_1(unsigned long long factor, char *in, char *out) {
 
     int level_number = height(root) + 1;
     int number_of_blocks = leaf_num(root);
-    int biggest_undiv_square = measurements;
     int lowest = min_height(root);
-    biggest_undiv_square = biggest_undiv_square >> lowest; // Divide by 2^lowest
+    int biggest_undiv_square = measurements >> lowest; // Divide by 2^lowest
 
     fprintf(output, "%d\n%d\n%d\n", level_number, number_of_blocks,
      biggest_undiv_square);

@@ -16,14 +16,18 @@ void task_3(char *in, char *out) {
         exit(1);
     }
 
+    // Read input from file.
     unsigned int size = read_size(input);
     char *buffer = NULL;
     unsigned long long buffer_size = 0;
     read_tree(input, &buffer, &buffer_size);
 
+    // Get tree.
     TQuadTree root = NULL;
     decompress(input, &root, buffer, buffer_size);
 
+    /* For each subsection of the array it is enough to know the coordinates 
+    of the top-left corner and down-right corner. */
     Point up_left, down_right;
     up_left.column = 0;
     up_left.row = 0;

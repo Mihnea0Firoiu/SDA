@@ -47,6 +47,7 @@ void build_image_tree(RGB *rgb_array, int dim, Point up_left, Point down_right,
         create_tree(root);
     }
 
+    // Calculate mean value of the current block.
     unsigned long long red = 0, green = 0, blue = 0;
     int column = down_right.column - up_left.column + 1;
     for (int i = up_left.row; i <= down_right.row; i++) {
@@ -75,7 +76,7 @@ void build_image_tree(RGB *rgb_array, int dim, Point up_left, Point down_right,
     
     mean = mean / (3 * column * column);
 
-    if (mean <= factor) {
+    if (mean <= factor) { // if mean <= factor, then the node is a leaf.
         (*root)->node_type = 1;
         (*root)->rgb.red = (unsigned char)red;
         (*root)->rgb.green = (unsigned char)green;
@@ -126,6 +127,7 @@ unsigned int read_size(FILE* input) {
 
 void get_array(RGB **rgb_array, int dim, Point up_left, Point down_right,
  TQuadTree root) {
+    // The whole section gets the same rgb values if the node type is 1.
     if (root->node_type == 1) {
         for (int i = up_left.row; i <= down_right.row; i++) {
             for (int j = up_left.column; j <= down_right.column; j++) {

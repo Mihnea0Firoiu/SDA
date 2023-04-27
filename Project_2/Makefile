@@ -30,8 +30,8 @@ Queue.o: Queue.c
 clean:
 	rm -f quadtree *.o
 
-run: tema2
-	./tema2
+run: quadtree
+	./quadtree
 
 archive:
-	zip tema2.zip *.c *.h tema2 README.md Makefile
+	zip quadtree.zip *.c *.h README.md Makefile
