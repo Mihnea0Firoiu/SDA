@@ -4,12 +4,20 @@
 #include <stdlib.h>
 #include "Heap.h"
 
-Heap* make_queue(int capacity) {
-	Heap *heap = malloc(sizeof(Heap));
-	heap->capacity = capacity;
-	heap->size = 0;
-	heap->elem = malloc(sizeof(HContent) * capacity);
-	return heap;
+void make_queue(Heap **heap, int capacity) {
+	*heap = malloc(sizeof(Heap));
+	(*heap)->capacity = capacity;
+	(*heap)->size = 0;
+	(*heap)->elem = malloc(sizeof(HContent) * capacity);
+}
+
+int is_in_heap(Heap *heap, int value) {
+	for (int i = 0; i < heap->size; i++) {
+		if (heap->elem[i].data == value) {
+			return 1;
+		}
+	}
+	return 0;
 }
 
 void sift_up(Heap *h, int idx) {

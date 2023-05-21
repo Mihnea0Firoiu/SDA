@@ -4,8 +4,8 @@
 #define HEAP_H
 
 typedef struct heap_content{
-	int data; // Item priority
-	int prior; // Item d
+	int data; // Item d
+	int prior; // Item priority
 }HContent;
 
 typedef struct heap{
@@ -14,7 +14,8 @@ typedef struct heap{
 	HContent *elem; // array of elements
 } Heap;
 
-Heap* make_queue(int);
+void make_queue(Heap **, int);
+int is_in_heap(Heap*, int);
 void sift_up(Heap *, int);
 void sift_down(Heap *, int);
 void insert_heap(Heap *, HContent);

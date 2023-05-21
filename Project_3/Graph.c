@@ -1,40 +1,88 @@
 /* FIROIU Mihnea-Ioan 313CD */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <string.h>
 #include "Graph.h"
+
+#define WORD_SIZE 20
 
 void init_graph(Graph **graph, int node_num, int type) {
     *graph = malloc(sizeof(Graph));
     (*graph)->node_num = node_num;
     (*graph)->type = type;
     (*graph)->adj = calloc(node_num, sizeof(List *));
+    (*graph)->node_names = calloc(node_num, sizeof(char *));
 }
 
-void insert_graph(Graph *graph, int u, int value, int cost, int type) {
-    List *node = malloc(sizeof(List));
-    node->data.cost = cost;
-    node->data.value = value;
-
-    // insert on the first position
-    node->next = graph->adj[u];
-    graph->adj[u] = node;
-
-    if (type == 0) { // graph is undirected
-        List *node_1 = malloc(sizeof(List));
-        node_1->data.cost = cost;
-        node_1->data.value = u;
-
-        // insert on the first position
-        node_1->next = graph->adj[value];
-        graph->adj[value] = node_1;
+void convert(Graph *graph, char *first_node, char *second_node, int *value_1,
+ int *value_2) {
+    *value_1 = -1;
+    *value_2 = -1;
+    for (int i = 0; i < graph->node_num; i++) {
+        if (graph->node_names[i] == NULL && *value_1 == -1) {
+            *value_1 = i;
+            graph->node_names[i] = strdup(first_node);
+            if (*value_2 != -1) {
+                return;
+            }
+        } else if (graph->node_names[i] == NULL && *value_2 == -1) {
+            *value_2 = i;
+            graph->node_names[i] = strdup(second_node);
+            if (*value_1 != -1) {
+                return;
+            }
+        } else if (strcmp(graph->node_names[i], first_node) == 0) {
+            *value_1 = i;
+            if (*value_2 != -1) {
+                return;
+            }
+        } else if (strcmp(graph->node_names[i], second_node) == 0) {
+            *value_2 = i;
+            if (*value_1 != -1) {
+                return;
+            }
+        }
     }
 }
 
-int get_cost(Graph *graph, int u, int value) {
-    List *temp = graph->adj[u];
+void insert_graph(Graph *graph, int value_1, int value_2, int cost) {
+    List *node = malloc(sizeof(List));
+    node->data.cost = cost;
+    node->data.value = value_2;
+
+    // insert on the first position
+    node->next = graph->adj[value_1];
+    graph->adj[value_1] = node;
+
+    if (graph->type == 0) { // graph is undirected
+        List *node_1 = malloc(sizeof(List));
+        node_1->data.cost = cost;
+        node_1->data.value = value_1;
+
+        // insert on the first position
+        node_1->next = graph->adj[value_2];
+        graph->adj[value_2] = node_1;
+    }
+}
+
+void read_graph(Graph *graph, FILE *input, int M) {
+    char first_node[WORD_SIZE];
+    char second_node[WORD_SIZE];
+    int cost, value_1, value_2;
+    for (int i = 0; i < M; i++) {
+        fscanf(input, "%s %s %d", first_node, second_node, &cost);
+        
+        convert(graph, first_node, second_node, &value_1, &value_2);
+        insert_graph(graph, value_1, value_2, cost);
+    }
+}
+
+int get_cost(Graph *graph, int value_1, int value_2) {
+    List *temp = graph->adj[value_1];
     while (temp != NULL) {
-        if (temp->data.value == value) {
+        if (temp->data.value == value_2) {
             return temp->data.cost;
         }
         temp = temp->next;
@@ -58,5 +106,9 @@ void free_graph(Graph *graph) {
         free(tmp);
     }
     free(graph->adj);
+    for (int i = 0; i < graph->node_num; i++) {
+        free(graph->node_names[i]);
+    }
+    free(graph->node_names);
     free(graph);
 }
