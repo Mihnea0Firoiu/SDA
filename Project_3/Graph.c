@@ -79,6 +79,10 @@ void read_graph(Graph *graph, FILE *input, int M) {
     }
 }
 
+void read_depth() {
+    
+}
+
 int get_cost(Graph *graph, int value_1, int value_2) {
     List *temp = graph->adj[value_1];
     while (temp != NULL) {

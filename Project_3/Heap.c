@@ -24,45 +24,33 @@ void sift_up(Heap *h, int idx) {
 	if (idx == 0) {
 		return ;
 	}
-    int parent = (idx - 1) / 2;
-	HContent tmp = h->elem[parent];
-	while (tmp.prior > h->elem[idx].prior && idx != 0) {
-		HContent aux = tmp;
+	while (h->elem[(idx - 1) / 2].prior > h->elem[idx].prior && idx != 0) {
+		HContent aux = h->elem[(idx - 1) / 2];
 		h->elem[(idx - 1) / 2] = h->elem[idx];
 		h->elem[idx] = aux;
 
 		idx = (idx - 1) / 2;
-		tmp = h->elem[(idx - 1) / 2];
 	}
 }
 
-void sift_down(Heap *h, int idx) {
-	if (h->size <= 1) {
-		return;
-	}
-	HContent tmp;
-	int idx_child;
-	if (h->elem[2 * idx + 1].prior < h->elem[idx].prior) {
-		tmp = h->elem[2 * idx + 1];
-		idx_child = 2 * idx + 1;
-	} else {
-		tmp = h->elem[2 * idx + 2];
-		idx_child = 2 * idx + 2;
-	}
-	while (tmp.prior < h->elem[idx].prior && idx_child < h->size) {
-		HContent aux = tmp;
-		h->elem[idx_child] = h->elem[idx];
-		h->elem[idx] = aux;
+void sift_down(Heap *heap, int idx) {
+	int smallest = idx;
+	int left = 2 * idx + 1;
+	int right = 2 * idx + 2;
 
-		idx = idx_child;
+	if (left < heap->size && heap->elem[left].prior < heap->elem[smallest].prior) {
+		smallest = left;
+	}
 
-		if (h->elem[2 * idx + 1].prior < h->elem[idx].prior) {
-			tmp = h->elem[2 * idx + 1];
-			idx_child = 2 * idx + 1;
-		} else {
-			tmp = h->elem[2 * idx + 2];
-			idx_child = 2 * idx + 2;
-		}
+	if (right < heap->size && heap->elem[right].prior < heap->elem[smallest].prior) {
+		smallest = right;
+	}
+
+	if (smallest != idx) {
+		HContent tmp = heap->elem[idx];
+		heap->elem[idx] = heap->elem[smallest];
+		heap->elem[smallest] = tmp;
+		sift_down(heap, smallest);
 	}
 }
 
@@ -77,9 +65,8 @@ void insert_heap(Heap *h, HContent x) {
 }
 
 void remove_min(Heap *h) {
-	for (int i = 0; i < h->size - 1; i++) {
-		h->elem[i] = h->elem[i + 1];
-	}
+	h->elem[0] = h->elem[h->size - 1];
+	sift_down(h, 0);
 	h->size--;
 }
 

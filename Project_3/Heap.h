@@ -5,7 +5,7 @@
 
 typedef struct heap_content{
 	int data; // Item d
-	int prior; // Item priority
+	float prior; // Item priority
 }HContent;
 
 typedef struct heap{
