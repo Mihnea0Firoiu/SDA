@@ -1,60 +1,106 @@
 /* FIROIU Mihnea-Ioan 313CD */
 
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <limits.h>
 #include "Graph.h"
 #include "Heap.h"
 #include "functions.h"
 
-void Dijkstra(Graph *graph, int M, int source, int destination, FILE* output) {
-    int *d = malloc(graph->node_num * sizeof(int)); // distance
-    int *position = calloc(graph->node_num, sizeof(int));
+#define INFINITY 100000
+#define WORD_SIZE 20
+
+void Dijkstra(Graph *graph, int M, int source, int destination,
+ float *depth, int treasure_mass, FILE* output, int *ok) {
+    int *d, *position, *parent;
+	char **path;
+	float *score;
     Heap *heap;
-    make_queue(&heap, M);
-
-
-    HContent content;
-	for (int i = 0; i < graph->node_num; i++) {
-		if (i != source) {
-			d[i] = INT_MAX;
-            content.data = i;
-            content.prior = INT_MAX;
-			insert_heap(heap, content);
-		}
-	}
+    
+	setup_Dijsktra(graph, &heap, M, source, &depth, &d, &position, &parent,
+	 &score, &path);
 	
-	// first element in heap
-	d[source] = 0;
-    content.data = source;
-    content.prior = 0;
-	insert_heap(heap, content);
-    reset_position(heap, position);
-
 	while (heap->size != 0) {
 		HContent min_node = heap->elem[0];
         remove_min(heap);
+		position = reset_position(heap, position);
 
 		List *temp = graph->adj[min_node.data];
 
 		while (temp != NULL) {
-			if (is_in_heap(heap, temp->data.value) != 0
-			 && d[min_node.data] != INT_MAX
-			 && d[min_node.data] + temp->data.cost < d[temp->data.value]) {
+			int value = temp->data.value;
+			float temp_score = temp->data.cost / depth[value];
+			if (is_in_heap(heap, value) != 0
+			 && score[min_node.data] != INFINITY
+			 && score[min_node.data] + temp_score < score[value]) {
 
-				d[temp->data.value] = d[min_node.data] + temp->data.cost;
-                sift_up(heap, position[temp->data.value]);
-                reset_position(heap, position);
+				parent[value] = min_node.data;
+
+				score[value] = score[min_node.data] + temp_score;
+				d[value] = d[min_node.data] + temp->data.cost;
+				heap->elem[position[value]].prior = score[value];
+                
+				sift_up(heap, position[value]);
+                position = reset_position(heap, position);
+
 			}
 			temp = temp->next;
 		}
 	}
-	printf("\n");
-	printf("Varf	Drum minim\n");
-	for (int i = 0; i < graph->node_num; i++) {
-		printf("%d    %d\n", i, d[i]);
+
+	if (d[destination] == INFINITY) {
+		if (strcmp(graph->node_names[destination], "Corabie") == 0) {
+			fprintf(output,
+			 "Echipajul nu poate transporta comoara inapoi la corabie\n");
+			free_structures(&heap, graph->node_num, &parent, &position, &score,
+			 &path, &d);
+
+			return;
+		} else if (strcmp(graph->node_names[destination], "Insula") == 0) {
+			fprintf(output, "Echipajul nu poate ajunge la insula\n");
+			*ok = 1;
+			free_structures(&heap, graph->node_num, &parent, &position, &score,
+			 &path, &d);
+			return;
+		}
+	} else if (strcmp(graph->node_names[destination], "Insula") == 0) {
+		free_structures(&heap, graph->node_num, &parent, &position, &score,
+	 	 &path, &d);
+		return;
 	}
-	free(d);
+
+	int min_depth = INFINITY;
+	int count = 0;
+	int node = parent[destination];
+	strcpy(path[count], graph->node_names[destination]);
+	count++;
+
+	while (node != -1) {
+		if (min_depth > depth[node] && node != source) {
+			min_depth = depth[node];
+		}
+		strcpy(path[count], graph->node_names[node]);
+		node = parent[node];
+		count++;
+	}
+
+	if (strcmp(path[count - 1], "Insula") != 0) {
+		fprintf(output, "Echipajul nu poate ajunge la insula\n");
+		exit(0);
+	}
+
+	// start print
+	for (int i = count - 1; i >= 0; i--) {
+		fprintf(output, "%s ", path[i]);
+	}
+	fprintf(output, "\n");
+	fprintf(output, "%d\n", d[destination]);
+	fprintf(output, "%d\n", min_depth);
+	fprintf(output, "%d\n", treasure_mass / min_depth);
+
+	free_structures(&heap, graph->node_num, &parent, &position, &score,
+	 &path, &d);
 }
 
 void task2() {
@@ -67,10 +113,31 @@ void task2() {
     Graph *graph;
     init_graph(&graph, N, 1);
     read_graph(graph, input, M);
-    
-    Prim(graph, M, output);
 
+	float *depth = malloc(sizeof(float) * N);
+
+    read_depth(graph, &depth, N, input);
+
+	int source, destination;
+	for (int i = 0; i < N; i++) {
+		if (strcmp("Insula", graph->node_names[i]) == 0) {
+            source = i;
+        } else if (strcmp("Corabie", graph->node_names[i]) == 0) {
+			destination = i;
+		}
+	}
+    
+	int treasure_mass;
+	fscanf(input, "%d", &treasure_mass);
+
+	int ok = 0;
+	Dijkstra(graph, M, destination, source, depth, treasure_mass, output, &ok);
+	if (ok != 1) {
+		Dijkstra(graph, M, source, destination, depth, treasure_mass, output,
+		 &ok);
+	}
     free_graph(graph);
+	free(depth);
 
     fclose(input);
     fclose(output);

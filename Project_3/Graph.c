@@ -79,8 +79,17 @@ void read_graph(Graph *graph, FILE *input, int M) {
     }
 }
 
-void read_depth() {
-    
+void read_depth(Graph *graph, float **depth, int N, FILE *input) {
+    char node[WORD_SIZE];
+    int d;
+    for (int i = 0; i < N; i++) {
+        fscanf(input, "%s %d", node, &d);
+        for (int j = 0; j < N; j++) {
+            if (strcmp(node, graph->node_names[j]) == 0) {
+                (*depth)[j] = d;
+            }
+        }
+    }
 }
 
 int get_cost(Graph *graph, int value_1, int value_2) {

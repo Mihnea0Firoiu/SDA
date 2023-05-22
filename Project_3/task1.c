@@ -32,7 +32,7 @@ void Prim(Graph* graph, int M, FILE* output) {
                 }
 
                 remove_min(heap);
-                reset_position(heap, position);
+                position = reset_position(heap, position);
 
                 List *temp = graph->adj[min_node.data];
                 while (temp != NULL) {

@@ -26,6 +26,7 @@ void init_graph(Graph **, int, int);
 void convert(Graph *, char *, char *, int *, int *);
 void insert_graph(Graph *, int, int, int);
 void read_graph(Graph *, FILE *, int);
+void read_depth(Graph *, float **, int, FILE*);
 int get_cost(Graph *, int, int);
 void free_graph(Graph *);
 
