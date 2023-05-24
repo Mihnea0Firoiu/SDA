@@ -1,0 +1,17 @@
+Task1:
+
+I used Prim's algorithm to figure out the number of conex components. All the
+nodes are introduced in the heap with cost INT_MAX. The root is introduced with
+cost 0. When a node's cost is changed, the node is "visited". This is done until
+all the nodes have been visited.
+
+Task2:
+
+I used Dijkstra's algorithm to find out the shortest path from "Insula" to
+"Corabie". The priority is not distance, is some kind of "score" which
+represents the ratio between the distance and the node's "depth". It is just
+a classic Dijkstra.
+
+Data structures used:
+
+Heap and Graph
