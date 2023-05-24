@@ -18,6 +18,7 @@ int* reset_position(Heap *heap, int *position) {
     return position;
 }
 
+// function to setup the Prim algorithm
 void setup_Prim(Graph *graph, Heap *heap, int ***distance, int *position,
  int *visited, int root, int conex_comp) {
     if (conex_comp != 1) {
@@ -47,7 +48,8 @@ void setup_Prim(Graph *graph, Heap *heap, int ***distance, int *position,
     position = reset_position(heap, position);
 }
 
-void setup_Dijsktra(Graph *graph, Heap **heap, int M, int source, float **depth,
+// function to setup the Dijkstra algorithm
+void setup_Dijkstra(Graph *graph, Heap **heap, int M, int source, float **depth,
  int **d, int **position, int **parent, float **score, char ***path) {
     *d = malloc(graph->node_num * sizeof(int)); // distance
     *position = calloc(graph->node_num, sizeof(int));

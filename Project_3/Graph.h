@@ -5,8 +5,8 @@
 #include <stdio.h>
 
 typedef struct graph_content {
-    int value;
-    int cost;
+    int value; // node value
+    int cost; // the cost of the edge
 } GContent;
 
 typedef struct list {
@@ -18,6 +18,7 @@ typedef struct graph {
     int node_num;
     // 0 for undirected graphs and 1 for directed graphs
     int type;
+    // node_names is used to assign a number to a node
     char **node_names;
     List **adj;
 } Graph;

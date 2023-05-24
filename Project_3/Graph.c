@@ -18,6 +18,7 @@ void init_graph(Graph **graph, int node_num, int type) {
 
 void convert(Graph *graph, char *first_node, char *second_node, int *value_1,
  int *value_2) {
+    // This function assigns values to an edge
     *value_1 = -1;
     *value_2 = -1;
     for (int i = 0; i < graph->node_num; i++) {

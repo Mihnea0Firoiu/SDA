@@ -13,14 +13,14 @@
 
 void Dijkstra(Graph *graph, int M, int source, int destination,
  float *depth, int treasure_mass, FILE* output, int *ok) {
-    int *d, *position, *parent;
-	char **path;
-	float *score;
+    int *d, *position, *parent; // distance, positon and parent
+	char **path; // path
+	float *score; // score
     Heap *heap;
     
-	setup_Dijsktra(graph, &heap, M, source, &depth, &d, &position, &parent,
+	setup_Dijkstra(graph, &heap, M, source, &depth, &d, &position, &parent,
 	 &score, &path);
-	
+	// Dijkstra begins here
 	while (heap->size != 0) {
 		HContent min_node = heap->elem[0];
         remove_min(heap);
@@ -64,6 +64,8 @@ void Dijkstra(Graph *graph, int M, int source, int destination,
 			 &path, &d);
 			return;
 		}
+	// if the destination is "Insula", the function only checks if there is a
+	// path between "Corabie" and "Insula"
 	} else if (strcmp(graph->node_names[destination], "Insula") == 0) {
 		free_structures(&heap, graph->node_num, &parent, &position, &score,
 	 	 &path, &d);
@@ -73,9 +75,10 @@ void Dijkstra(Graph *graph, int M, int source, int destination,
 	int min_depth = INFINITY;
 	int count = 0;
 	int node = parent[destination];
+	// build the path array
 	strcpy(path[count], graph->node_names[destination]);
 	count++;
-
+	
 	while (node != -1) {
 		if (min_depth > depth[node] && node != source) {
 			min_depth = depth[node];
@@ -83,11 +86,6 @@ void Dijkstra(Graph *graph, int M, int source, int destination,
 		strcpy(path[count], graph->node_names[node]);
 		node = parent[node];
 		count++;
-	}
-
-	if (strcmp(path[count - 1], "Insula") != 0) {
-		fprintf(output, "Echipajul nu poate ajunge la insula\n");
-		exit(0);
 	}
 
 	// start print
@@ -131,6 +129,7 @@ void task2() {
 	fscanf(input, "%d", &treasure_mass);
 
 	int ok = 0;
+	// check first if there is a path between "Corabie" and "Insula"
 	Dijkstra(graph, M, destination, source, depth, treasure_mass, output, &ok);
 	if (ok != 1) {
 		Dijkstra(graph, M, source, destination, depth, treasure_mass, output,

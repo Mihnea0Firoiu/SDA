@@ -4,8 +4,8 @@
 #define HEAP_H
 
 typedef struct heap_content{
-	int data; // Item d
-	float prior; // Item priority
+	int data; // value of the node
+	float prior; // priority
 }HContent;
 
 typedef struct heap{

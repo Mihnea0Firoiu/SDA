@@ -24,7 +24,7 @@ void Prim(Graph* graph, int M, FILE* output) {
 
             setup_Prim(graph, heap, &distance, position, visited, i,
              conex_comp);
-
+            // Prim starts here
             while (heap->size != 0) {
                 HContent min_node = heap->elem[0];
                 if (min_node.prior == INT_MAX) {

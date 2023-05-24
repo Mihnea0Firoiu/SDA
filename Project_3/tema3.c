@@ -10,9 +10,11 @@ int main(int argc, char *argv[]) {
         return 0;
     }
     if (strcmp(argv[1], "1") == 0) {
+        // function for task1
         task1();
         return 0;
     } else if (strcmp(argv[1], "2") == 0) {
+        // function for task2
         task2();
         return 0;
     }
